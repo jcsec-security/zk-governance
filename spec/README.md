@@ -6,6 +6,7 @@ More technical details can be found in our [blogpost](https://protocols-made-fun
 ## Getting Started
 
 Once all the [dependencies](https://quint-lang.org/docs/getting-started) are installed, you can run sanity tests:
+
 ```
 make test
 ```
@@ -27,7 +28,9 @@ quint verify --random-transitions=true --invariant=strictFreezeAllowedOpsInv --m
 ```
 
 Bounded model checking:
+
 ```
 quint verify --invariant=strictFreezeAllowedOpsInv --max-steps=1 main.qnt
 ```
+
 `max-steps` should be adjusted according to your goals and computational resources

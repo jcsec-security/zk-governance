@@ -28,4 +28,3 @@ async function privateKeyIsHardhatSigner(privateKey: string): Promise<boolean> {
   }
   return false;
 }
-

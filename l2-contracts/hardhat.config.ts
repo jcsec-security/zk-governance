@@ -6,7 +6,7 @@ import "@matterlabs/hardhat-zksync-node";
 import "@matterlabs/hardhat-zksync-upgradable";
 import "@matterlabs/hardhat-zksync-verify";
 
-import * as dotenv from 'dotenv';
+import * as dotenv from "dotenv";
 dotenv.config();
 
 const config: HardhatUserConfig = {
@@ -20,7 +20,7 @@ const config: HardhatUserConfig = {
     },
   },
   paths: {
-    "sources": "./src",
+    sources: "./src",
   },
   networks: {
     hardhat: {

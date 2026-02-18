@@ -85,8 +85,8 @@ contract ProtocolUpgradeHandler is IProtocolUpgradeHandler, Initializable {
     /// @dev Chain asset handler contract for migration pausing/unpausing.
     IChainAssetHandler public immutable CHAIN_ASSET_HANDLER;
 
-    /// @dev Chain ID of the Era chain.
-    uint256 public immutable ERA_CHAIN_ID;    
+    /// @dev Chain ID of the zkSync Era chain.
+    uint256 public immutable ERA_CHAIN_ID;
 
     /// @notice The address of the Security Council.
     address public securityCouncil;
@@ -193,8 +193,9 @@ contract ProtocolUpgradeHandler is IProtocolUpgradeHandler, Initializable {
         }
 
         // Legal veto period
-        uint256 legalVetoTime =
-            upg.guardiansExtendedLegalVeto ? EXTENDED_LEGAL_VETO_PERIOD : STANDARD_LEGAL_VETO_PERIOD();
+        uint256 legalVetoTime = upg.guardiansExtendedLegalVeto
+            ? EXTENDED_LEGAL_VETO_PERIOD
+            : STANDARD_LEGAL_VETO_PERIOD();
         if (block.timestamp < upg.creationTimestamp + legalVetoTime) {
             return UpgradeState.LegalVetoPeriod;
         }
@@ -202,9 +203,10 @@ contract ProtocolUpgradeHandler is IProtocolUpgradeHandler, Initializable {
         // Security council approval case
         if (upg.securityCouncilApprovalTimestamp != 0) {
             uint256 readyWithSecurityCouncilTimestamp = upg.securityCouncilApprovalTimestamp + UPGRADE_DELAY_PERIOD();
-            return block.timestamp >= readyWithSecurityCouncilTimestamp
-                ? UpgradeState.Ready
-                : UpgradeState.ExecutionPending;
+            return
+                block.timestamp >= readyWithSecurityCouncilTimestamp
+                    ? UpgradeState.Ready
+                    : UpgradeState.ExecutionPending;
         }
 
         uint256 waitOrExpiryTimestamp = upg.creationTimestamp + legalVetoTime + UPGRADE_WAIT_OR_EXPIRE_PERIOD;
@@ -239,10 +241,18 @@ contract ProtocolUpgradeHandler is IProtocolUpgradeHandler, Initializable {
         UpgradeProposal calldata _proposal
     ) external {
         bytes memory upgradeMessage = abi.encode(_proposal);
-        IBridgeHub.L2Message memory l2ToL1Message =
-            IBridgeHub.L2Message({txNumberInBatch: _l2TxNumberInBatch, sender: L2_PROTOCOL_GOVERNOR, data: upgradeMessage});
-        bool success =
-            BRIDGE_HUB.proveL2MessageInclusion(ERA_CHAIN_ID, _l2BatchNumber, _l2MessageIndex, l2ToL1Message, _proof);
+        IBridgeHub.L2Message memory l2ToL1Message = IBridgeHub.L2Message({
+            txNumberInBatch: _l2TxNumberInBatch,
+            sender: L2_PROTOCOL_GOVERNOR,
+            data: upgradeMessage
+        });
+        bool success = BRIDGE_HUB.proveL2MessageInclusion(
+            ERA_CHAIN_ID,
+            _l2BatchNumber,
+            _l2MessageIndex,
+            l2ToL1Message,
+            _proof
+        );
         require(success, "Failed to check upgrade proposal initiation");
         require(_proposal.executor != emergencyUpgradeBoard, "Emergency Upgrade Board can't execute usual upgrade");
 
@@ -286,7 +296,10 @@ contract ProtocolUpgradeHandler is IProtocolUpgradeHandler, Initializable {
         require(!upgradeStatus[_id].guardiansApproval, "Upgrade is already approved by guardians");
 
         UpgradeState upgState = upgradeState(_id);
-        require(upgState == UpgradeState.Waiting, "Upgrade with this id is not waiting for the approval from Guardians");
+        require(
+            upgState == UpgradeState.Waiting,
+            "Upgrade with this id is not waiting for the approval from Guardians"
+        );
         upgradeStatus[_id].guardiansApproval = true;
 
         emit UpgradeApprovedByGuardians(_id);
@@ -340,7 +353,8 @@ contract ProtocolUpgradeHandler is IProtocolUpgradeHandler, Initializable {
         for (uint256 i = 0; i < _calls.length; ++i) {
             if (_calls[i].data.length > 0) {
                 require(
-                    _calls[i].target.code.length > 0, "Target must be a smart contract if the calldata is not empty"
+                    _calls[i].target.code.length > 0,
+                    "Target must be a smart contract if the calldata is not empty"
                 );
             }
             (bool success, bytes memory returnData) = _calls[i].target.call{value: _calls[i].value}(_calls[i].data);
@@ -370,8 +384,9 @@ contract ProtocolUpgradeHandler is IProtocolUpgradeHandler, Initializable {
     function hardFreeze() external onlySecurityCouncil {
         FreezeStatus freezeStatus = lastFreezeStatusInUpgradeCycle;
         require(
-            freezeStatus == FreezeStatus.None || freezeStatus == FreezeStatus.Soft
-                || freezeStatus == FreezeStatus.AfterSoftFreeze,
+            freezeStatus == FreezeStatus.None ||
+                freezeStatus == FreezeStatus.Soft ||
+                freezeStatus == FreezeStatus.AfterSoftFreeze,
             "Protocol can't be hard frozen"
         );
         lastFreezeStatusInUpgradeCycle = FreezeStatus.Hard;
@@ -499,7 +514,7 @@ contract ProtocolUpgradeHandler is IProtocolUpgradeHandler, Initializable {
         address _securityCouncil,
         address _guardians,
         address _emergencyUpgradeBoard
-    ) external initializer() {
+    ) external initializer {
         securityCouncil = _securityCouncil;
         emit ChangeSecurityCouncil(address(0), _securityCouncil);
 

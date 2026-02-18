@@ -1,5 +1,5 @@
 import { config as dotEnvConfig } from "dotenv";
-import { getTokenContract } from './utils'
+import { getTokenContract } from "./utils";
 
 // Before executing in a real deployment, be sure to set these values as appropriate for the environment being deployed
 // to. The values used in the script at the time of deployment can be checked in along with the deployment artifacts
@@ -32,10 +32,10 @@ async function main() {
   if (hasRoleAfter) {
     throw `Failed to revoke DEFAULT_ADMIN_ROLE to ${SELECTED_DEFAULT_ADMIN}`;
   }
-  console.log('Successfully revoked DEFAULT_ADMIN_ROLE to ' + SELECTED_DEFAULT_ADMIN);
+  console.log("Successfully revoked DEFAULT_ADMIN_ROLE to " + SELECTED_DEFAULT_ADMIN);
 }
 
 main().catch((error) => {
-    console.error(error);
-    process.exitCode = 1;
+  console.error(error);
+  process.exitCode = 1;
 });

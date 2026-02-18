@@ -119,7 +119,8 @@ interface IProtocolUpgradeHandler {
 
     /// @notice Emitted when the emergency upgrade board address is changed.
     event ChangeEmergencyUpgradeBoard(
-        address indexed _emergencyUpgradeBoardBefore, address indexed _emergencyUpgradeBoardAfter
+        address indexed _emergencyUpgradeBoardBefore,
+        address indexed _emergencyUpgradeBoardAfter
     );
 
     /// @notice Emitted when upgrade process on L1 is started.

@@ -31,14 +31,16 @@ contract Guardians is IGuardians, Multisig, EIP712 {
     bytes32 internal constant APPROVE_UPGRADE_GUARDIANS_TYPEHASH = keccak256("ApproveUpgradeGuardians(bytes32 id)");
 
     /// @dev EIP-712 TypeHash for canceling the L2 proposals by the guardians.
-    bytes32 internal constant CANCEL_L2_GOVERNOR_PROPOSAL_TYPEHASH = keccak256(
-        "CancelL2GovernorProposal(uint256 l2ProposalId,address l2GovernorAddress,uint256 l2GasLimit,uint256 l2GasPerPubdataByteLimit,address refundRecipient,uint256 txMintValue,uint256 nonce)"
-    );
+    bytes32 internal constant CANCEL_L2_GOVERNOR_PROPOSAL_TYPEHASH =
+        keccak256(
+            "CancelL2GovernorProposal(uint256 l2ProposalId,address l2GovernorAddress,uint256 l2GasLimit,uint256 l2GasPerPubdataByteLimit,address refundRecipient,uint256 txMintValue,uint256 nonce)"
+        );
 
     /// @dev EIP-712 TypeHash for proposing the L2 proposals by the guardians.
-    bytes32 internal constant PROPOSE_L2_GOVERNOR_PROPOSAL_TYPEHASH = keccak256(
-        "ProposeL2GovernorProposal(uint256 l2ProposalId,address l2GovernorAddress,uint256 l2GasLimit,uint256 l2GasPerPubdataByteLimit,address refundRecipient,uint256 txMintValue,uint256 nonce)"
-    );
+    bytes32 internal constant PROPOSE_L2_GOVERNOR_PROPOSAL_TYPEHASH =
+        keccak256(
+            "ProposeL2GovernorProposal(uint256 l2ProposalId,address l2GovernorAddress,uint256 l2GasLimit,uint256 l2GasPerPubdataByteLimit,address refundRecipient,uint256 txMintValue,uint256 nonce)"
+        );
 
     /// @dev The number of signatures needed to approve the upgrade by guardians.
     uint256 public constant APPROVE_UPGRADE_GUARDIANS_THRESHOLD = 5;
@@ -57,7 +59,7 @@ contract Guardians is IGuardians, Multisig, EIP712 {
 
     /// @dev Initializes the Guardians contract with predefined members and setup for EIP-712.
     /// @param _protocolUpgradeHandler The address of the protocol upgrade handler contract, responsible for executing the
-    /// upgrades. 
+    /// upgrades.
     /// @param _bridgeHub The address of the BridgeHub
     /// @param _eraChainId Chain ID corresponding to ZKsync Era
     /// @param _members Array of addresses representing the members of the guardians.

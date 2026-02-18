@@ -1,5 +1,5 @@
 import { config as dotEnvConfig } from "dotenv";
-import { getTokenContract } from './utils'
+import { getTokenContract } from "./utils";
 
 // Before executing in a real deployment, be sure to set these values as appropriate for the environment being deploying
 // to. The values used in the script at the time of deployment can be checked in along with the deployment artifacts
@@ -22,7 +22,6 @@ async function main() {
     return;
   }
   console.log("Granting new MINTER_ROLE for ZkTokenV1 to " + MINTER);
-  
 
   // grant the MINTER_ROLE to the MINTER account
   const tx = await tokenContract.grantRole(tokenContract.MINTER_ROLE(), MINTER);
@@ -33,10 +32,10 @@ async function main() {
   if (!hasRoleAfter) {
     throw `Failed to grant MINTER_ROLE to ${MINTER}`;
   }
-  console.log('Successfully granted MINTER_ROLE to ' + MINTER);
+  console.log("Successfully granted MINTER_ROLE to " + MINTER);
 }
 
 main().catch((error) => {
-    console.error(error);
-    process.exitCode = 1;
+  console.error(error);
+  process.exitCode = 1;
 });

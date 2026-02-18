@@ -7,7 +7,7 @@ import * as hre from "hardhat";
 // to. The values used in the script at the time of deployment can be checked in along with the deployment artifacts
 // produced by running the scripts.
 const contractName = "ZkProtocolGovernor";
-const tokenAddress = "0x69e5DC39E2bCb1C17053d2A4ee7CAEAAc5D36f96";  // TODO: We'll need to deploy this contract first to get the actual address
+const tokenAddress = "0x69e5DC39E2bCb1C17053d2A4ee7CAEAAc5D36f96"; // TODO: We'll need to deploy this contract first to get the actual address
 const votingDelay = 60 * 15; // For test purposes, 15 minutes
 const votingPeriod = 60 * 15; // For test purposes, 15 minutes
 const proposalThreshold = 10; // For testing purposes, actual deployment will need real values
@@ -37,7 +37,16 @@ async function main() {
   console.log("Deploying " + contractName + "...");
 
   const contract = await deployer.loadArtifact(contractName);
-  const constructorArgs = [contractName, tokenAddress, timeLockAddress, votingDelay, votingPeriod, proposalThreshold, initialQuorum, initialLateQuorum];
+  const constructorArgs = [
+    contractName,
+    tokenAddress,
+    timeLockAddress,
+    votingDelay,
+    votingPeriod,
+    proposalThreshold,
+    initialQuorum,
+    initialLateQuorum,
+  ];
   const protocolGovernor = await deployer.deploy(contract, constructorArgs);
 
   const contractAddress = await protocolGovernor.getAddress();
@@ -55,6 +64,6 @@ async function main() {
 }
 
 main().catch((error) => {
-    console.error(error);
-    process.exitCode = 1;
-  });
+  console.error(error);
+  process.exitCode = 1;
+});

@@ -10,8 +10,8 @@ const ADMIN_ACCOUNT = "0xdEADBEeF00000000000000000000000000000000";
 const TOKEN_ADDRESS = "0x99E12239CBf8112fBB3f7Fd473d0558031abcbb5";
 const MERKLE_ROOT = "0x0000000000000000000000000000000000000000000000000000000000000001";
 const MAX_CLAIMABLE = "1000000000000000000000000000"; // raw decimals, bigint fails to encode with deploy
-const WINDOW_START = 1750000000
-const WINDOW_END = 1760000000
+const WINDOW_START = 1750000000;
+const WINDOW_END = 1760000000;
 
 async function main() {
   dotEnvConfig();
@@ -41,6 +41,6 @@ async function main() {
 }
 
 main().catch((error) => {
-    console.error(error);
-    process.exitCode = 1;
-  });
+  console.error(error);
+  process.exitCode = 1;
+});

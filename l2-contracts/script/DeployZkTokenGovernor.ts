@@ -7,7 +7,7 @@ import * as hre from "hardhat";
 // to. The values used in the script at the time of deployment can be checked in along with the deployment artifacts
 // produced by running the scripts.
 const contractName = "ZkTokenGovernor";
-const tokenAddress = "0x69e5DC39E2bCb1C17053d2A4ee7CAEAAc5D36f96";  // TODO: We'll need to deploy this contract first to get the actual address
+const tokenAddress = "0x69e5DC39E2bCb1C17053d2A4ee7CAEAAc5D36f96"; // TODO: We'll need to deploy this contract first to get the actual address
 const votingDelay = 60 * 15; // For test purposes, 15 minutes
 const votingPeriod = 60 * 15; // For test purposes, 15 minutes
 const proposalThreshold = 10; // For testing purposes, actual deployment will need real values
@@ -27,30 +27,30 @@ async function main() {
   const zkWallet = new Wallet(deployerPrivateKey);
   const deployer = new Deployer(hre, zkWallet);
 
-    // deploy timelock controller for the token governor
-    console.log(`Deploying ${contractName} TimelockController contract...`);
-    const timelockContract = await deployer.loadArtifact("TimelockController");
-    const adminAddress = await zkWallet.getAddress();
-    const timelockConstructorArgs = [0, [], [], adminAddress];
-    const timelock = await deployer.deploy(timelockContract, timelockConstructorArgs);
-    const timeLockAddress = await timelock.getAddress();
-    console.log(`${contractName} TimelockController contract was deployed to ${timeLockAddress}`);
-  
-    console.log("Deploying " + contractName + "...");
+  // deploy timelock controller for the token governor
+  console.log(`Deploying ${contractName} TimelockController contract...`);
+  const timelockContract = await deployer.loadArtifact("TimelockController");
+  const adminAddress = await zkWallet.getAddress();
+  const timelockConstructorArgs = [0, [], [], adminAddress];
+  const timelock = await deployer.deploy(timelockContract, timelockConstructorArgs);
+  const timeLockAddress = await timelock.getAddress();
+  console.log(`${contractName} TimelockController contract was deployed to ${timeLockAddress}`);
+
+  console.log("Deploying " + contractName + "...");
 
   const contract = await deployer.loadArtifact(contractName);
   const argStruct = {
-      name: contractName,
-      token: tokenAddress,
-      timelock: timeLockAddress,
-      initialVotingDelay: votingDelay,
-      initialVotingPeriod: votingPeriod,
-      initialProposalThreshold: proposalThreshold,
-      initialQuorum: initialQuorum,
-      initialVoteExtension: initialLateQuorum,
-      vetoGuardian: vetoGuardian,
-      proposeGuardian: proposeGuardian,
-      isProposeGuarded: initialIsProposeGuarded
+    name: contractName,
+    token: tokenAddress,
+    timelock: timeLockAddress,
+    initialVotingDelay: votingDelay,
+    initialVotingPeriod: votingPeriod,
+    initialProposalThreshold: proposalThreshold,
+    initialQuorum: initialQuorum,
+    initialVoteExtension: initialLateQuorum,
+    vetoGuardian: vetoGuardian,
+    proposeGuardian: proposeGuardian,
+    isProposeGuarded: initialIsProposeGuarded,
   };
   const constructorArgs = [argStruct];
   const tokenGovernor = await deployer.deploy(contract, constructorArgs);
@@ -72,6 +72,6 @@ async function main() {
 }
 
 main().catch((error) => {
-    console.error(error);
-    process.exitCode = 1;
-  });
+  console.error(error);
+  process.exitCode = 1;
+});
