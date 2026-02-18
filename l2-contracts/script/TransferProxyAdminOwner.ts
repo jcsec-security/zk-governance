@@ -37,7 +37,7 @@ async function main() {
   console.log("Current proxy admin instance owner: " + currentAdminInstanceOwner);
 
   await hre.zkUpgrades.admin.transferProxyAdminOwnership(NEW_OWNER, deployer.zkWallet);
-  
+
   const newAdminInstanceOwner = await adminInstance.owner();
   if (newAdminInstanceOwner === NEW_OWNER) {
     console.log("Successfully proxy admin instance owner to " + newAdminInstanceOwner);

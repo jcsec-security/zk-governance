@@ -31,7 +31,7 @@ async function main() {
   console.log("Deploying " + contractName + "...");
 
   const zkWallet = new Wallet(deployerPrivateKey);
-  const deployer = new Deployer(hre, zkWallet, 'create2');
+  const deployer = new Deployer(hre, zkWallet, "create2");
 
   const contract = await deployer.loadArtifact(contractName);
   const zkTokenV1 = await hre.zkUpgrades.deployProxy(
@@ -43,8 +43,9 @@ async function main() {
       saltImpl: SALT_IMPL,
       deploymentTypeImpl: "create2",
       saltProxy: SALT_PROXY,
-      deploymentTypeProxy: "create2"
-    });
+      deploymentTypeProxy: "create2",
+    }
+  );
 
   await zkTokenV1.waitForDeployment();
   console.log(contractName + " deployed to:", await zkTokenV1.getAddress());

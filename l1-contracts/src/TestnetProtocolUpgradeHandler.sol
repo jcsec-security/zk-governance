@@ -23,7 +23,7 @@ contract TestnetProtocolUpgradeHandler is ProtocolUpgradeHandler {
     }
 
     /// @notice Initializes the contract with the Security Council address, guardians address and address of L2 voting
-    /// governor. 
+    /// governor.
     /// @param _l2ProtocolGovernor The address of the L2 voting governor contract for protocol upgrades.
     /// @param _chainTypeManager The address of the state transition manager.
     /// @param _bridgeHub The address of the bridgehub.

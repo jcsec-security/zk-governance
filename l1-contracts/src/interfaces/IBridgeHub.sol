@@ -35,10 +35,9 @@ interface IBridgeHub is IPausable {
     /// the msg.sender has approved mintValue allowance for the nativeTokenVault.
     /// This means this is not ideal for contract calls, as the contract would have to handle token allowance of the base
     /// Token. In case allowance is provided to the Asset Router, then it will be transferred to NTV.
-    function requestL2TransactionDirect(L2TransactionRequestDirect calldata _request)
-        external
-        payable
-        returns (bytes32 canonicalTxHash);
+    function requestL2TransactionDirect(
+        L2TransactionRequestDirect calldata _request
+    ) external payable returns (bytes32 canonicalTxHash);
 
     /// @notice Returns all the registered zkChain chainIDs
     function getAllZKChainChainIDs() external view returns (uint256[] memory);
@@ -56,5 +55,5 @@ interface IBridgeHub is IPausable {
         uint256 _index,
         L2Message calldata _message,
         bytes32[] calldata _proof
-    ) external view returns (bool);    
+    ) external view returns (bool);
 }

@@ -2,14 +2,14 @@ import { config as dotEnvConfig } from "dotenv";
 import { Deployer } from "@matterlabs/hardhat-zksync-deploy";
 import { Wallet } from "zksync-ethers";
 import * as hre from "hardhat";
-import * as fs from 'fs';
-import * as path from 'path';
+import * as fs from "fs";
+import * as path from "path";
 
 // Read the bytecode hash from ZkCappedMinter.json
 // Verify the zksolc version used to compile the contract, the hash changes with different versions
-const zkCappedMinterPath = path.join(__dirname, '../zkout/ZkCappedMinter.sol/ZkCappedMinter.json');
-const zkCappedMinterJson = JSON.parse(fs.readFileSync(zkCappedMinterPath, 'utf8'));
-const BYTECODE_HASH = '0x' + zkCappedMinterJson.hash;
+const zkCappedMinterPath = path.join(__dirname, "../zkout/ZkCappedMinter.sol/ZkCappedMinter.json");
+const zkCappedMinterJson = JSON.parse(fs.readFileSync(zkCappedMinterPath, "utf8"));
+const BYTECODE_HASH = "0x" + zkCappedMinterJson.hash;
 
 async function main() {
   dotEnvConfig();
@@ -23,7 +23,7 @@ async function main() {
   console.log("Deploying " + contractName + "...");
 
   const zkWallet = new Wallet(deployerPrivateKey);
-  const deployer = new Deployer(hre, zkWallet, 'create2');
+  const deployer = new Deployer(hre, zkWallet, "create2");
 
   const contract = await deployer.loadArtifact(contractName);
   const constructorArgs = [BYTECODE_HASH];
@@ -39,6 +39,6 @@ async function main() {
 }
 
 main().catch((error) => {
-    console.error(error);
-    process.exitCode = 1;
-  });
+  console.error(error);
+  process.exitCode = 1;
+});

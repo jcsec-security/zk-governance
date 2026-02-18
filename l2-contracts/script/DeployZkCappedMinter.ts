@@ -23,12 +23,12 @@ async function main() {
   console.log("Deploying " + contractName + "...");
 
   const zkWallet = new Wallet(deployerPrivateKey);
-  const deployer = new Deployer(hre, zkWallet, 'create2');
+  const deployer = new Deployer(hre, zkWallet, "create2");
 
   const contract = await deployer.loadArtifact(contractName);
   const constructorArgs = [TOKEN_ADDRESS, ADMIN_ACCOUNT, CAP_AMOUNT];
-  const customData = {salt: SALT};
-  const cappedMinter = await deployer.deploy(contract, constructorArgs, {customData});
+  const customData = { salt: SALT };
+  const cappedMinter = await deployer.deploy(contract, constructorArgs, { customData });
 
   console.log("constructor args:" + cappedMinter.interface.encodeDeploy(constructorArgs));
 
@@ -40,6 +40,6 @@ async function main() {
 }
 
 main().catch((error) => {
-    console.error(error);
-    process.exitCode = 1;
-  });
+  console.error(error);
+  process.exitCode = 1;
+});

@@ -7,8 +7,7 @@ import { getTokenContract } from "./utils";
 // The TOKEN_ADDRESS below is derived from the output of the DeployZkTokenV1.ts script, using hardhat/zksync local node account 0 as the deployer.
 // The MINTER_ADMIN_ADDRESS is initially set to the hardhat/zkSync local node account 1.
 const TOKEN_ADDRESS = "0x5A7d6b2F92C77FAD6CCaBd7EE0624E64907Eaf3E";
-const MINTER_ADMIN_ADDRESS = "0x478A1eBE665396ce0F2F87aB0F057aC273451B92"
-
+const MINTER_ADMIN_ADDRESS = "0x478A1eBE665396ce0F2F87aB0F057aC273451B92";
 
 async function main() {
   dotEnvConfig();
@@ -31,10 +30,10 @@ async function main() {
   if (hasRoleAfter) {
     throw `Failed to revoke MINTER_ADMIN_ROLE for ${MINTER_ADMIN_ADDRESS}`;
   }
-  console.log('Successfully revoked MINTER_ADMIN_ROLE for ' + MINTER_ADMIN_ADDRESS);
+  console.log("Successfully revoked MINTER_ADMIN_ROLE for " + MINTER_ADMIN_ADDRESS);
 }
 
 main().catch((error) => {
-    console.error(error);
-    process.exitCode = 1;
+  console.error(error);
+  process.exitCode = 1;
 });

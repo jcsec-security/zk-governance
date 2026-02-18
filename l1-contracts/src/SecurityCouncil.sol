@@ -73,10 +73,10 @@ contract SecurityCouncil is ISecurityCouncil, Multisig, EIP712 {
     /// @param _protocolUpgradeHandler The address of the protocol upgrade handler contract, responsible for executing the upgrades.
     /// @param _members Array of addresses representing the members of the Security Council.
     /// Expected to be sorted in ascending order without duplicates.
-    constructor(IProtocolUpgradeHandler _protocolUpgradeHandler, address[] memory _members)
-        Multisig(_members, 9)
-        EIP712("SecurityCouncil", "1")
-    {
+    constructor(
+        IProtocolUpgradeHandler _protocolUpgradeHandler,
+        address[] memory _members
+    ) Multisig(_members, 9) EIP712("SecurityCouncil", "1") {
         PROTOCOL_UPGRADE_HANDLER = _protocolUpgradeHandler;
         require(_members.length == 12, "SecurityCouncil requires exactly 12 members");
         softFreezeThreshold = RECOMMENDED_SOFT_FREEZE_THRESHOLD;
@@ -86,9 +86,11 @@ contract SecurityCouncil is ISecurityCouncil, Multisig, EIP712 {
     /// @param _id Unique identifier of the upgrade proposal to be approved.
     /// @param _signers An array of signers associated with the signatures.
     /// @param _signatures An array of signatures from council members approving the upgrade.
-    function approveUpgradeSecurityCouncil(bytes32 _id, address[] calldata _signers, bytes[] calldata _signatures)
-        external
-    {
+    function approveUpgradeSecurityCouncil(
+        bytes32 _id,
+        address[] calldata _signers,
+        bytes[] calldata _signatures
+    ) external {
         bytes32 digest = _hashTypedDataV4(keccak256(abi.encode(APPROVE_UPGRADE_SECURITY_COUNCIL_TYPEHASH, _id)));
         checkSignatures(digest, _signers, _signatures, APPROVE_UPGRADE_SECURITY_COUNCIL_THRESHOLD);
         PROTOCOL_UPGRADE_HANDLER.approveUpgradeSecurityCouncil(_id);
@@ -150,7 +152,10 @@ contract SecurityCouncil is ISecurityCouncil, Multisig, EIP712 {
         bytes32 digest = _hashTypedDataV4(
             keccak256(
                 abi.encode(
-                    SET_SOFT_FREEZE_THRESHOLD_TYPEHASH, _threshold, softFreezeThresholdSettingNonce++, _validUntil
+                    SET_SOFT_FREEZE_THRESHOLD_TYPEHASH,
+                    _threshold,
+                    softFreezeThresholdSettingNonce++,
+                    _validUntil
                 )
             )
         );
