@@ -1,0 +1,16 @@
+# l1-contracts
+l1-contracts/cache
+l1-contracts/lib
+l1-contracts/out
+l1-contracts/scripts
+l1-contracts/test
+
+
+# l2-contracts
+l2-contracts/cache
+l2-contracts/lib
+l2-contracts/cache-zk
+l2-contracts/node_modules
+l2-contracts/out
+l2-contracts/scripts
+l2-contracts/test
