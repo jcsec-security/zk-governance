@@ -85,7 +85,7 @@ contract ProtocolUpgradeHandler is IProtocolUpgradeHandler, Initializable {
     /// @dev Chain asset handler contract for migration pausing/unpausing.
     IChainAssetHandler public immutable CHAIN_ASSET_HANDLER;
 
-    /// @dev Chain ID of the Era chain.
+    /// @dev Chain ID of the zkSync Era chain.
     uint256 public immutable ERA_CHAIN_ID;    
 
     /// @notice The address of the Security Council.
