@@ -6,68 +6,82 @@ import "forge-std/Script.sol";
 import {Vm, console2} from "forge-std/Test.sol";
 
 import "./Utils.sol";
-import "./ICREATE3Factory.sol";
+import "./ICreate3Factory.sol";
 
 import "../src/SecurityCouncil.sol";
 import "../src/Guardians.sol";
-import "../src/ProtocolUpgradeHandlerT.sol";
+import "../src/ProtocolUpgradeHandler.sol";
 import "../src/EmergencyUpgradeBoard.sol";
+import {IChainTypeManager} from "../src/interfaces/IChainTypeManager.sol";
 
 contract MainnetDeploy is Script {
-    ICREATE3Factory constant CREATE3_FACTORY = ICREATE3Factory(0x9fBB3DF7C40Da2e5A0dE984fFE2CCB7C47cd0ABf);
+    ICREATE3Factory CREATE3_FACTORY = ICREATE3Factory(vm.envAddress("CREATE3_FACTORY"));
 
     bytes32 PROTOCOL_UPGRADE_HANDLER_SALT = keccak256("ProtocolUpgradeHandler");
     bytes32 GUARDIANS_SALT = keccak256("Guardians");
     bytes32 SECURITY_COUNCIL_SALT = keccak256("SecurityCouncil");
     bytes32 EMERGENCY_UPGRADE_BOARD_SALT = keccak256("EmergencyUpgradeBoard");
 
-    IZKsyncEra constant ZKSYNC_ERA = IZKsyncEra(0x32400084C286CF3E17e7B677ea9583e60a000324);
-    IStateTransitionManager constant CHAIN_TYPE_MANAGER = IStateTransitionManager(0xc2eE6b6af7d616f6e27ce7F4A451Aedc2b0F5f5C);
-    IPausable constant BRIDGE_HUB = IPausable(0x303a465B659cBB0ab36eE643eA362c509EEb5213);
-    IPausable constant L1_ASSET_ROUTER = IPausable(0xD7f9f54194C633F36CCD5F3da84ad4a1c38cB2cB);
+    address ZKSYNC_ERA = vm.envAddress("ZKSYNC_ERA");
+    address CHAIN_TYPE_MANAGER = vm.envAddress("CHAIN_TYPE_MANAGER");
+    address BRIDGE_HUB = vm.envAddress("BRIDGE_HUB");
+    address L1_ASSET_ROUTER = vm.envAddress("L1_ASSET_ROUTER");
 
     function run() external {
         uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
         Vm.Wallet memory deployerWallet = vm.createWallet(deployerPrivateKey);
 
-        address[] memory guardiansMembers = vm.envAddress("GURDIAN_MEMBERS", ",");
+        address[] memory guardiansMembers = vm.envAddress("GUARDIAN_MEMBERS", ",");
         guardiansMembers = Utils.sortAddresses(guardiansMembers);
 
         address[] memory securityCouncilMembers = vm.envAddress("SECURITY_COUNCIL_MEMBERS", ",");
         securityCouncilMembers = Utils.sortAddresses(securityCouncilMembers);
         
         address zkFoundation = vm.envAddress("ZK_FOUNDATION");
+        address l2ProtocolGovernor = vm.envAddress("L2_PROTOCOL_GOVERNOR");
 
         (address protocolUpgradeHandler, address guardians, address securityCouncil, address emergencyUpgradeBoard) = predictAddresses(deployerWallet.addr);
 
-        address l2ProtocolGovernor = vm.envAddress("L2_PROTOCOL_GOVERNOR");
-        bytes memory protocolUpgradeHandlerConstructorArgs = abi.encode(securityCouncil, guardians, emergencyUpgradeBoard, l2ProtocolGovernor, ZKSYNC_ERA, CHAIN_TYPE_MANAGER, BRIDGE_HUB, L1_ASSET_ROUTER);
+        // Deploy PUH
+        bytes memory protocolUpgradeHandlerConstructorArgs = abi.encode(
+            securityCouncil, 
+            guardians, 
+            emergencyUpgradeBoard, 
+            l2ProtocolGovernor, 
+            IZKsyncEra(ZKSYNC_ERA), 
+            IChainTypeManager(CHAIN_TYPE_MANAGER), 
+            IPausable(BRIDGE_HUB), 
+            IPausable(L1_ASSET_ROUTER)
+        );
         bytes memory protocolUpgradeHandlerCreationCode = abi.encodePacked(type(ProtocolUpgradeHandler).creationCode, protocolUpgradeHandlerConstructorArgs);
-
         vm.startBroadcast();
         CREATE3_FACTORY.deploy(PROTOCOL_UPGRADE_HANDLER_SALT, protocolUpgradeHandlerCreationCode);
         vm.stopBroadcast();
+        console.log("XXXX PUH");
 
-        bytes memory guardiansConstructorArgs = abi.encode(protocolUpgradeHandler, ZKSYNC_ERA, guardiansMembers);
-        bytes memory guardiansCreationCode = abi.encodePacked(type(Guardians).creationCode, guardiansConstructorArgs);
-        
+        // Deploy Guardians
+        bytes memory guardiansConstructorArgs = abi.encode(protocolUpgradeHandler, IZKsyncEra(ZKSYNC_ERA), guardiansMembers);
+        bytes memory guardiansCreationCode = abi.encodePacked(type(Guardians).creationCode, guardiansConstructorArgs);   
         vm.startBroadcast();
         CREATE3_FACTORY.deploy(GUARDIANS_SALT, guardiansCreationCode);
         vm.stopBroadcast();
+        console.log("XXXX GUARDIANS");
 
+        // Deploy SecurityCouncil
         bytes memory securityCouncilConstructorArgs = abi.encode(protocolUpgradeHandler, securityCouncilMembers);
         bytes memory securityCouncilCreationCode = abi.encodePacked(type(SecurityCouncil).creationCode, securityCouncilConstructorArgs);
-        
         vm.startBroadcast();
         CREATE3_FACTORY.deploy(SECURITY_COUNCIL_SALT, securityCouncilCreationCode);
         vm.stopBroadcast();
-        
+        console.log("XXXX SC");
+
+        // Deploy EmergencyUpgradeBoard
         bytes memory emergencyUpgradeBoardConstructorArgs = abi.encode(protocolUpgradeHandler, securityCouncil, guardians, zkFoundation);
-        bytes memory emergencyUpgradeBoardCreationCode = abi.encodePacked(type(EmergencyUpgradeBoard).creationCode, emergencyUpgradeBoardConstructorArgs);
-        
+        bytes memory emergencyUpgradeBoardCreationCode = abi.encodePacked(type(EmergencyUpgradeBoard).creationCode, emergencyUpgradeBoardConstructorArgs);      
         vm.startBroadcast();
         CREATE3_FACTORY.deploy(EMERGENCY_UPGRADE_BOARD_SALT, emergencyUpgradeBoardCreationCode);
         vm.stopBroadcast();
+        console.log("XXXX EUB");
     }
 
     function predictAddresses(address deployerWallet) public returns(address protocolUpgradeHandler, address guardians, address securityCouncil, address emergencyUpgradeBoard) {
