@@ -81,7 +81,7 @@ contract Redeploy is Script {
         address guardians = _currentProtocolUpgradeHandler.guardians();
         EmergencyUpgradeBoard emergencyUpgradeBoard = EmergencyUpgradeBoard(_currentProtocolUpgradeHandler.emergencyUpgradeBoard());
 
-        uint256 eraChainId = vm.envUint("ERA_CHAIN_ID");//TODO after the next redeployment, update to _currentProtocolUpgradeHandler.ERA_CHAIN_ID();
+        uint256 eraChainId = vm.envUint("ERA_CHAIN_ID");//address(_currentProtocolUpgradeHandler.ERA_CHAIN_ID());
         address stateTransitionManager = address(_currentProtocolUpgradeHandler.CHAIN_TYPE_MANAGER());
         address bridgehub = address(_currentProtocolUpgradeHandler.BRIDGE_HUB());
         address sharedBridge = address(_currentProtocolUpgradeHandler.L1_ASSET_ROUTER());
