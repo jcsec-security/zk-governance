@@ -6,7 +6,7 @@ import "forge-std/Script.sol";
 import {Vm, console2} from "forge-std/Test.sol";
 
 import "./Utils.sol";
-import "./ICREATE3Factory.sol";
+import "./ICreate3Factory.sol";
 
 import "../src/SecurityCouncil.sol";
 import "../src/Guardians.sol";
